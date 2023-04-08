@@ -63,8 +63,10 @@ strncpy
 		do {
 			if ((*d++ = *s++) == '\0') {
 				/* NUL pad the remaining n-1 bytes */
-				while (--n != 0)
-					*d++ = '\0';
+				/* while (--n != 0) */
+				/* 	*d++ = '\0'; */
+				if (--n != 0)
+					memset(d, 0, n);
 				break;
 			}
 		} while (--n != 0);
