@@ -82,6 +82,11 @@
 #define	cheri_setbounds(x, y)	__builtin_cheri_bounds_set((x), (y))
 #define	cheri_setboundsexact(x, y)	__builtin_cheri_bounds_set_exact((x), (y))
 
+// Experimental macro 
+#define cheri_andpermuserdata(x) __builtin_cheri_user_data_perms_and((x))
+#define cheri_andaddress(x, y) __builtin_cheri_address_and((x), (y))
+#define cheri_testdereferenceable(x) __builtin_cheri_dereferenceable_test((x))
+
 /* Compare capabilities including bounds and perms etc. */
 #define cheri_equal_exact(x, y) __builtin_cheri_equal_exact(x, y)
 

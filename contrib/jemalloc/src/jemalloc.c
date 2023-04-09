@@ -2431,8 +2431,8 @@ je_malloc(size_t size) {
 #ifndef __CHERI_PURE_CAPABILITY__
 		return ret;
 #else
-		return cheri_andperm(cheri_setboundsexact(ret, size),
-				CHERI_PERMS_USERSPACE_DATA & ~CHERI_PERM_SW_VMEM);
+		/* Use Experiemtnal instruction.*/
+		return cheri_andpermuserdata(cheri_setboundsexact(ret, size));
 #endif
 	}
 

@@ -41,20 +41,26 @@ unbound_ptr(tsdn_t *tsdn, void *ptr) {
 	 * metadata is required to prevent attacks where bounds are
 	 * manipulated.
 	 */
-	if (unlikely(!cheri_gettag(ptr))) {
-		malloc_write("<jemalloc>: can't unbound invalid cap\n");
-		abort();
-	}
-	if (unlikely(cheri_getoffset(ptr) != 0)) {
-		malloc_write("<jemalloc>: refusing to unbound cap at "
-		    "non-zero offset\n");
-		abort();
-	}
-	if (unlikely(cheri_getsealed(ptr))) {
-		malloc_write("<jemalloc>: refusing to unbound sealed cap\n");
-		abort();
-	}
+	// if (unlikely(!cheri_gettag(ptr))) {
+	// 	malloc_write("<jemalloc>: can't unbound invalid cap\n");
+	// 	abort();
+	// }
+	// if (unlikely(cheri_getoffset(ptr) != 0)) {
+	// 	malloc_write("<jemalloc>: refusing to unbound cap at "
+	// 	    "non-zero offset\n");
+	// 	abort();
+	// }
+	// if (unlikely(cheri_getsealed(ptr))) {
+	// 	malloc_write("<jemalloc>: refusing to unbound sealed cap\n");
+	// 	abort();
+	// }
 
+	// Use new experimental test instruction
+	if (unlikely(!cheri_test_dereferenceable(ptr))) {
+		malloc_write("<jemalloc>: can't unbound not dereferenceable cap\n");
+		abort();
+	}
+	
 	rtree_ctx = tsdn_rtree_ctx(tsdn, &rtree_ctx_fallback);
 	extent = rtree_extent_read(tsdn, &extents_rtree,
 	    rtree_ctx, (uintptr_t)ptr, true);
