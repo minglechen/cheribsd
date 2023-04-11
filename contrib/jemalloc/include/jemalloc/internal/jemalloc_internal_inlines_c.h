@@ -56,11 +56,11 @@ unbound_ptr(tsdn_t *tsdn, void *ptr) {
 	// }
 
 	// Use new experimental test instruction
-	if (unlikely(!cheri_test_dereferenceable(ptr))) {
+	if (unlikely(!cheri_testdereferenceable(ptr))) {
 		malloc_write("<jemalloc>: can't unbound not dereferenceable cap\n");
 		abort();
 	}
-	
+
 	rtree_ctx = tsdn_rtree_ctx(tsdn, &rtree_ctx_fallback);
 	extent = rtree_extent_read(tsdn, &extents_rtree,
 	    rtree_ctx, (uintptr_t)ptr, true);
