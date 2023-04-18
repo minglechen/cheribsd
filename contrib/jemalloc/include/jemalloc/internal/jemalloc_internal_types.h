@@ -99,7 +99,10 @@ typedef int malloc_cpuid_t;
 	((void *)((uintptr_t)(a) & ((~(alignment)) + 1)))
 
 /* Return the offset between a and the nearest aligned address at or below a. */
-#if __has_builtin(__builtin_align_down)
+#if __has_builtin(__builtin_cheri_address_and) && defined(__CHERI_PURE_CAPABILITY__)
+#define ALIGNMENT_ADDR2OFFSET(a, alignment)				\
+	((size_t)__builtin_cheri_address_and((a), (alignment) - 1))
+#elif __has_builtin(__builtin_align_down)
 #define ALIGNMENT_ADDR2OFFSET(a, alignment)				\
 	((size_t)((a) - __builtin_align_down((a), alignment)))
 #else

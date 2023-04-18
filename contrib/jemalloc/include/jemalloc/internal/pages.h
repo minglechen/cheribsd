@@ -39,7 +39,10 @@
 #define HUGEPAGE	((size_t)(1U << LG_HUGEPAGE))
 #define HUGEPAGE_MASK	((size_t)(HUGEPAGE - 1))
 /* Return the huge page base address for the huge page containing address a. */
-#if __has_builtin(__builtin_align_down)
+#if __has_builtin(__builtin_cheri_address_and) && defined(__CHERI_PURE_CAPABILITY__)
+# define HUGEPAGE_ADDR2BASE(a)						\
+	((void *)__builtin_cheri_address_and((a), ~HUGEPAGE_MASK))
+#elif __has_builtin(__builtin_align_down)
 #define HUGEPAGE_ADDR2BASE(a)						\
 	__builtin_align_down((a), HUGEPAGE)
 #else

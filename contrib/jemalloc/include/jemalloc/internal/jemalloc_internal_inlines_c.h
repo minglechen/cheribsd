@@ -56,7 +56,7 @@ unbound_ptr(tsdn_t *tsdn, void *ptr) {
 	// }
 
 	// Use new experimental test instruction
-	if (unlikely(!cheri_testdereferenceable(ptr))) {
+	if (unlikely(cheri_testdereferenceable(ptr) == 0)) {
 		malloc_write("<jemalloc>: can't unbound not dereferenceable cap\n");
 		abort();
 	}
