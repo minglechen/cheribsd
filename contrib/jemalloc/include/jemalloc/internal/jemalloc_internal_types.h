@@ -95,9 +95,13 @@ typedef int malloc_cpuid_t;
 	(((s) + CACHELINE_MASK) & ~CACHELINE_MASK)
 
 /* Return the nearest aligned address at or below a. */
+#if __has_builtin(__builtin_cheri_address_and) && defined(__CHERI_PURE_CAPABILITY__)
+#define ALIGNMENT_ADDR2BASE(a, alignment)				\
+	((void *)__builtin_cheri_address_and((a), (~(alignment) + 1)))
+#else
 #define ALIGNMENT_ADDR2BASE(a, alignment)				\
 	((void *)((uintptr_t)(a) & ((~(alignment)) + 1)))
-
+#endif
 /* Return the offset between a and the nearest aligned address at or below a. */
 #if __has_builtin(__builtin_cheri_address_and) && defined(__CHERI_PURE_CAPABILITY__)
 #define ALIGNMENT_ADDR2OFFSET(a, alignment)				\

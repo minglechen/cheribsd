@@ -19,7 +19,10 @@
 #define PAGE		((size_t)(1U << LG_PAGE))
 #define PAGE_MASK	((size_t)(PAGE - 1))
 /* Return the page base address for the page containing address a. */
-#if __has_builtin(__builtin_align_down)
+#if __has_builtin(__builtin_cheri_address_and) && defined(__CHERI_PURE_CAPABILITY__)
+# define PAGE_ADDR2BASE(a)						\
+	((void *)__builtin_cheri_address_and((a), ~PAGE_MASK))
+#elif __has_builtin(__builtin_align_down)
 #define PAGE_ADDR2BASE(a)						\
 	__builtin_align_down((a), PAGE)
 #else
